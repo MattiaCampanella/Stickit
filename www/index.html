@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<style>
+    body {
+        background-color: lightblue;
+        text-align: center;
+        display: flex;
+        justify-content:center;
+        align-items: center;
+        flex-direction: column;
+    }
+    
+    .container{
+        background-color: rgb(223, 223, 0);
+        width: 300px;
+        height: 300px;
+        
+        padding: 10px;
+        box-shadow: 2px 2px 5px 2px black;
+    }
+
+    h1 {
+        color: #ff2e2e;
+        
+    }
+
+    h2 {
+        padding-top:10px;
+        margin: 0;
+    }
+
+    input {
+        border-radius: 5px;
+        margin: 10px;
+    }
+
+    #registerForm{
+        display: none;
+    }    
+</style>
+<body>
+    
+    <div class="container" id="loginForm">
+        <h1>Login</h1>
+        <form action="/login" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <br>
+            <button type="submit">Login</button>
+        </form>
+        <br><br><br>
+        <a href="#" onclick="document.querySelector('#loginForm').style.display='none';document.querySelector('#registerForm').style.display='block';">Register</a>
+    </div>
+    <div class="container" id="registerForm">
+        <h1>Register</h1>
+        <form id="RegisterForm" action="/register" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <br>
+            <button type="submit">Register</button>
+        </form>
+        <br><br><br>
+        <a href="#" onclick="document.querySelector('#loginForm').style.display='block';document.querySelector('#registerForm').style.display='none';">Login</a>
+    </div>
+</body>
+
+<script>
+    async function login() {
+        const username = document.querySelector("#user").value;
+        const password = document.querySelector("#pass").value;
+        console.log(username, password);
+        fetch("/login", {
+            method:"POST",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body:JSON.stringify({username, password})
+        }).then(response=>response.json())
+        .then(data => {
+            if(data.success){
+                alert("Login Successful");
+            }else{
+                alert("Login Failed");
+            }
+        });
+    }
+</script>
+</html>
