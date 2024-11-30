@@ -24,9 +24,8 @@
         box-shadow: 2px 2px 5px 2px black;
     }
 
-    h1 {
+    div h1 {
         color: #ff2e2e;
-        
     }
 
     h2 {
@@ -42,17 +41,23 @@
     #registerForm{
         display: none;
     }    
+
+    .title{
+        color:black;
+        font-size: 50px;
+        font-weight: bold;
+    }
 </style>
 <body>
-    
+    <h1 class="title">Reizouko - Stick it!</h1>
     <div class="container" id="loginForm">
         <h1>Login</h1>
         <form action="/login" method="POST">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+            <input type="text" name="username" required>
             <br>
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" name="password" required>
             <br>
             <button type="submit">Login</button>
         </form>
@@ -61,26 +66,24 @@
     </div>
     <div class="container" id="registerForm">
         <h1>Register</h1>
-        <form id="RegisterForm" action="/register" method="POST">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
             <br>
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
             <br>
-            <button type="submit">Register</button>
-        </form>
+            <button onclick="SendRegister()">Register</button>
         <br><br><br>
         <a href="#" onclick="document.querySelector('#loginForm').style.display='block';document.querySelector('#registerForm').style.display='none';">Login</a>
+        
     </div>
 </body>
 
 <script>
-    async function login() {
-        const username = document.querySelector("#user").value;
-        const password = document.querySelector("#pass").value;
-        console.log(username, password);
-        fetch("/login", {
+    async function SendRegister() {
+        const username = document.querySelector("#username").value;
+        const password = document.querySelector("#password").value;
+        fetch("/register", {
             method:"POST",
             headers:{
                 "Content-Type": "application/json"
@@ -89,11 +92,14 @@
         }).then(response=>response.json())
         .then(data => {
             if(data.success){
-                alert("Login Successful");
+                alert("Registration Successful");
+                //show login form
+                document.querySelector('#loginForm').style.display='block';document.querySelector('#registerForm').style.display='none';
             }else{
-                alert("Login Failed");
+                alert("Registration Failed");
             }
         });
     }
+
 </script>
 </html>

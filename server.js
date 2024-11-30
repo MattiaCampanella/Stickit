@@ -17,18 +17,29 @@ server.listen(port, () => {
 });
 
 
-//test user
+//test user//
 const user = { username: "admin", password: "admin" };
 
 app.post("/login", (req, res)=>{
     const {username, password} = req.body;
-    console.log(username, password);
 
+    //check credentials - subsitute here
     if (username !== user.username || password !== user.password) {
         return res.status(400).json({error:"Wrong Credentials"});
     }
+    //subsitute here
+
     res.sendFile(__dirname + "/www/blankCanvas.html");
 });
+
+app.post("/register", (req, res)=>{
+    const {username, password} = req.body;
+
+    //insert user into db
+
+    res.json({success:true});
+});
+
 
 app.post("/register", (req, res)=>{
     const {username, password} = req.body;
