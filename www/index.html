@@ -52,7 +52,7 @@
     <h1 class="title">Reizouko - Stick it!</h1>
     <div class="container" id="loginForm">
         <h1>Login</h1>
-        <form action="/login" method="POST">
+        <form action="/board" method="POST">
             <label for="username">Username:</label>
             <input type="text" name="username" required>
             <br>
@@ -96,7 +96,7 @@
                 //show login form
                 document.querySelector('#loginForm').style.display='block';document.querySelector('#registerForm').style.display='none';
             }else{
-                alert("Registration Failed");
+                alert("Registration Failed", data.error);
             }
         });
     }

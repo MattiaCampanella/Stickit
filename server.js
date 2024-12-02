@@ -29,54 +29,51 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
-      // Connect the client to the server	(optional starting in v4.7)
-      await client.connect();
-      // Send a ping to confirm a successful connection
-      await client.db("admin").command({ ping: 1 });
-      console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    } finally {
-      // Ensures that the client will close when you finish/error
-      await client.close();
+        // Connect the client to the server	(optional starting in v4.7)
+        await client.connect();
+        const db = client.db("stickit");
+        const collections = await db.collections();
+        const users = db.collection("users");
+        // Send a ping to confirm a successful connection
+        await client.db("stickit").command({ ping: 1 });
+        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    } catch {
+        console.log("Failed to connect to MongoDB");
     }
-  }
-  run().catch(console.dir);
+}
+run().catch(console.dir);
+//database collection users
+const users = client.db("stickit").collection("users");
 
-//test user//
-const user = { username: "admin", password: "admin" };
-
-app.post("/board", (req, res)=>{
+app.post("/board", async (req, res)=>{
     const {username, password} = req.body;
+    console.log("received", username, password);
 
-    if(username === user.username && password === user.password){ //check if user is admin
-        res.sendFile(__dirname + "/www/blankCanvas.html");
-    }
-
-    //check users credentials in db.users
-    if(db.users.findOne({username: username}) === null){
+    const user = await users.findOne({username: username});
+    if(user == undefined){
         return res.status(400).json({error:"User not found"});
     }
-    if(!bcrypt.compareSync(password, db.users.findOne({username: username}).password)){
+
+    if(!bcrypt.compareSync(password, user.password)){
         return res.status(400).json({error:"Wrong password"});
     }
     res.sendFile(__dirname + "/www/blankCanvas.html");
 });
 
-app.post("/register", (req, res)=>{
+app.post("/register", async (req, res)=>{
     const {username, password} = req.body;
 
+    console.log("received", username, password);
     //insert user into db.users
-    db.users.insertOne({
+    
+    if(await users.findOne({username: username}) !== null){
+        return res.status(400).json({error:"User already exists"});
+    }
+
+    users.insertOne({
         username: username,
         password: bcrypt.hashSync(password, 8)
     });
 
     res.json({success:true});
-});
-
-
-app.post("/register", (req, res)=>{
-    const {username, password} = req.body;
-    console.log(username, password);
-    
-    res.sendFile(__dirname + "/www/index.html");
 });
